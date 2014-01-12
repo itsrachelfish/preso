@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/jquery-1.9.1.min.js"></script>
+
+        <script>
+            var socket = io.connect('http://127.0.0.1');
+               
+            socket.on('count', function(data)
+            {
+                if(data.users == 1)
+                    $('h1').html(data.users+' user connected');
+                else
+                    $('h1').html(data.users+' users connected');
+            });
+
+            socket.on('sensor', function(data)
+            {
+                $('.sensor').text(data.value);
+            });
+        </script>
+
+        <style>
+            .sensor { font-size: 200pt; }
+        </style>
+    </head>
+
+    <body>
+        <h1>Loading...</h1>
+        <div class="sensor"></div>
+    </body>
+</html>
