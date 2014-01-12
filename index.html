@@ -4,7 +4,7 @@
         <script src="/js/jquery-1.9.1.min.js"></script>
 
         <script>
-            var socket = io.connect('http://127.0.0.1');
+            var socket = io.connect('http://192.168.2.144');
                
             socket.on('count', function(data)
             {
@@ -18,7 +18,14 @@
             {
                 if(sensor.name == 'next')
                 {
-                    $('.slide span.hide').first().fadeIn().removeClass('hide').addClass('show');
+                    if($('.slide span.hide').length)
+                    {
+                        $('.slide span.hide').first().fadeIn().removeClass('hide').addClass('show');
+                    }
+                    else
+                    {
+                        $("body").append("<audio controls autoplay><source src='/music/ytcracker - bitcoin baron (v1 ssl lt).mp3' type='audio/mpeg'></audio>");
+                    }
                 }
                 else if(sensor.name == 'previous')
                 {
