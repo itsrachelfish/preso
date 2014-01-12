@@ -14,19 +14,38 @@
                     $('h1').html(data.users+' users connected');
             });
 
-            socket.on('sensor', function(data)
+            socket.on('sensor', function(sensor)
             {
-                $('.sensor').text(data.value);
+                if(sensor.name == 'next')
+                {
+                    $('.slide span.hide').first().fadeIn().removeClass('hide').addClass('show');
+                }
+                else if(sensor.name == 'previous')
+                {
+                    $('.slide span.show').last().fadeOut().removeClass('show').addClass('hide');
+                }
             });
         </script>
 
         <style>
-        //    .sensor { font-size: 200pt; }
+            .slide { font-size: 100pt; }
+            .slide span { float:left; margin: 0.25em; }
+            .hide { display: none; }
+            .show { display: inline; }
         </style>
     </head>
 
     <body>
         <h1>Loading...</h1>
-        <div class="sensor"></div>
+
+        <section class="slides">
+            <div class="slide">
+                <span class="hide">rachel</span>
+                <span class="hide">is</span>
+                <span class="hide">the</span>
+                <span class="hide">coolest</span>
+                <span class="hide">programmer</span>
+            </div>
+        </section>
     </body>
 </html>

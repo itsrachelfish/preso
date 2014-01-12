@@ -20,7 +20,7 @@ function getDate()
     return day+'-'+month+'-'+year+' '+hour+':'+min+':'+sec;
 }
 
-server.listen(1025);
+server.listen(1337);
 
 app.use(express.static(__dirname + '/static'));
 
@@ -50,20 +50,42 @@ var five = require("johnny-five"),
 
 board = new five.Board();
 
-board.on("ready", function() {
+board.on("ready", function()
+{
+    prevSensor = new five.Sensor({
+        pin: "A0",
+        freq: 100
+      });
 
-  // Create a new `sensor` hardware instance.
-  sensor = new five.Sensor({
-    pin: "A0",
-    freq: 100
-  });
+    nextSensor = new five.Sensor({
+        pin: "A1",
+        freq: 100
+    });
 
-  board.repl.inject({
-    sensor: sensor
-  });
+    board.repl.inject({
+        sensor: sensor
+    });
 
-  sensor.on("data", function() {
-      io.sockets.emit('sensor', {value: this.raw});
-    console.log(this.raw); // so raw ;3
-  });
+    var trigger = new Date();
+
+    function handleSensor(sensor)
+    {
+        // Only send data over the socket ever 250ms
+        if(sensor.value > 500 && new Date() - trigger > 250)
+        {
+            trigger = new Date();
+            io.sockets.emit('sensor', sensor);
+            console.log(sensor.name, sensor.value);
+        }
+    }
+
+    prevSensor.on("data", function()
+    {
+        handleSensor({name: 'previous', value: this.raw});
+    });
+
+    nextSensor.on("data", function()
+    {
+        handleSensor({name: 'next', value: this.raw});
+    });
 });
