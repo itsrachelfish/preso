@@ -33,11 +33,25 @@ io.sockets.on('connection', function (socket)
 {
     count++;
     io.sockets.emit('count', {users: count});
+    socket.emit('status', {message: "Connected"});
 
     console.log(getDate() + ' User connected');
 
+    var lastPing;
+    var pingInterval = setInterval(function()
+    {
+        socket.emit('ping', {ping: new Date().getTime(), last: lastPing});
+    }, 1000);
+
+    socket.on('pong', function(time)
+    {
+        lastPing = (new Date().getTime() - time.ping) / 2;
+    });
+
     socket.on('disconnect', function ()
     {
+        clearInterval(pingInterval);
+        
         console.log(getDate() + ' User disconnected');
         count--;
         
