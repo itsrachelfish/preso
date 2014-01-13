@@ -1,41 +1,34 @@
-
-
-var express = require('express')
-  , app     = require('express')()
-  , server  = require('http').createServer(app)
-  , io      = require('socket.io').listen(server)
-  , count   = 0;
-
-function getDate()
-{
-    var date = new Date();
-    
-    var   day   = date.getDate()
-        , month = date.getMonth() + 1
-        , year  = date.getFullYear()
-        , hour  = date.getHours()
-        , min   = date.getMinutes()
-        , sec   = date.getSeconds();
-
-    return day+'-'+month+'-'+year+' '+hour+':'+min+':'+sec;
-}
+var express = require('express'),
+    app     = require('express')(),
+    server  = require('http').createServer(app),
+    io      = require('socket.io').listen(server),
+    five = require("johnny-five"),
+    users   = 0,
+    slide   = 1,
+    board, sensor;
 
 server.listen(1337);
 
-app.use(express.static(__dirname + '/static'));
 
+// Create routes for static content and the index
+app.use(express.static(__dirname + '/static'));
 app.get('/', function (req, res)
 {
   res.sendfile(__dirname + '/index.html');
 });
 
+
+// Websocket magic
 io.sockets.on('connection', function (socket)
 {
-    count++;
-    io.sockets.emit('count', {users: count});
-    socket.emit('status', {message: "Connected"});
+    users++;
 
-    console.log(getDate() + ' User connected');
+    // Notify other clients of the new user
+    io.sockets.emit('users', {count: users});
+
+    // Let the new user know they're connected
+    socket.emit('status', {message: "Connected"});
+    socket.emit('slide', {number: slide, name: "new"});
 
     var lastPing;
     var pingInterval = setInterval(function()
@@ -51,16 +44,11 @@ io.sockets.on('connection', function (socket)
     socket.on('disconnect', function ()
     {
         clearInterval(pingInterval);
+        users--;
         
-        console.log(getDate() + ' User disconnected');
-        count--;
-        
-        io.sockets.emit('count', {users: count});
+        io.sockets.emit('users', {users: users});
     });
 });
-
-var five = require("johnny-five"),
-  board, sensor;
 
 board = new five.Board();
 
@@ -76,20 +64,24 @@ board.on("ready", function()
         freq: 100
     });
 
-    board.repl.inject({
-        sensor: sensor
-    });
+    board.repl.inject({sensor: sensor});
 
     var trigger = new Date();
-
-    function handleSensor(sensor)
+    var handleSensor = function(sensor)
     {
         // Only send data over the socket ever 250ms
         if(sensor.value > 500 && new Date() - trigger > 250)
-        {
+        {            
+            if(sensor.name == 'previous') {
+                if(slide > 0) slide--;
+            }
+            else if(sensor.name == 'next') {
+                slide++;
+            }
+            
             trigger = new Date();
-            io.sockets.emit('sensor', sensor);
-            console.log(sensor.name, sensor.value);
+            io.sockets.emit('slide', {number: slide, type: sensor.name});
+            console.log(slide, sensor.name, sensor.value);
         }
     }
 
