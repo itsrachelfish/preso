@@ -30,6 +30,12 @@
                     console.log(output);
                 });
 
+                socket.on('abort', function()
+                {
+                    $('.magic audio').get(0).pause();
+                    $('.magic audio').get(0).currentTime = 0;
+                });
+
                 socket.on('status', function(status)
                 {
                     $('.footer .status a').text(status.message);
@@ -54,8 +60,6 @@
                 socket.on('slide', function(slide)
                 {
                     var timeout = slide.time - new Date().getTime();
-                    console.log(timeout);
-
                     if(timeout < 0) timeout = 0;
                     
                     setTimeout(function()

@@ -61,6 +61,7 @@ io.sockets.on('connection', function (socket)
     });
 
     socket.on('incoming-magic', function() { magic = 1 });
+    socket.on('abort', function() { io.sockets.emit('abort') });
 
     socket.on('debug', function()
     {
@@ -118,7 +119,6 @@ board.on("ready", function()
             }
 
             magic = 0;
-            console.log(slide, sensor.name, sensor.value);
         }
     }
 
