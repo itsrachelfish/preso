@@ -12,6 +12,8 @@
         <script src="/js/bootstrap.min.js"></script>
 
         <script>
+            var socket;
+            
             /**
              * StyleFix 1.0.3 & PrefixFree 1.0.7
              * @author Lea Verou
@@ -21,7 +23,12 @@
             
             $(document).ready(function()
             {
-                var socket = io.connect('http://192.168.2.144');
+                socket = io.connect('http://192.168.2.144');
+
+                socket.on('debug', function(output)
+                {
+                    console.log(output);
+                });
 
                 socket.on('status', function(status)
                 {
@@ -40,63 +47,75 @@
                         $('.footer .ping a').text('Ping: '+ping.last.toFixed(1)+'ms');
                     }
                     
-                    ping.pong = new Date();
+                    ping.pong = new Date().getTime();
                     socket.emit('pong', ping);
                 });
 
                 socket.on('slide', function(slide)
                 {
-                    $('.slide').each(function()
-                    {
-                        if($(this).index('.slide') <= slide.number)
-                        {
-                            if($(this).prop('tagName').toLowerCase() == "article")
-                            {
-                                var aIndex = $(this).index("article.slide");
-                                var sIndex = $("article.slide").eq(aIndex+1).index('.slide');
+                    var timeout = slide.time - new Date().getTime();
+                    console.log(timeout);
 
-                                if(sIndex >= slide.number || sIndex == -1)
+                    if(timeout < 0) timeout = 0;
+                    
+                    setTimeout(function()
+                    {
+                        $('.slide').each(function()
+                        {
+                            if($(this).index('.slide') <= slide.number)
+                            {
+                                if($(this).prop('tagName').toLowerCase() == "article")
                                 {
-                                    $(this).siblings().hide().removeClass('slide-show').addClass('slide-hide');
-                                    $(this).stop().fadeIn().removeClass('slide-hide').addClass('slide-show');
+                                    var aIndex = $(this).index("article.slide");
+                                    var sIndex = $("article.slide").eq(aIndex+1).index('.slide');
+
+                                    if(sIndex >= slide.number || sIndex == -1)
+                                    {
+                                        $(this).siblings().hide().removeClass('slide-show').addClass('slide-hide');
+                                        $(this).stop().fadeIn().removeClass('slide-hide').addClass('slide-show');
+                                    }
+                                }
+                                else
+                                {
+                                    if($(this).find('svg').length && $(this).hasClass('slide-hide'))
+                                    {
+                                        var cascade = 100;
+
+                                        $(this).find('path').each(function()
+                                        {
+                                            $(this).css({opacity: 0}).delay(cascade).animate({opacity: 1});
+                                            cascade += 25;
+                                        });
+                                    }
+
+                                    $(this).fadeIn().removeClass('slide-hide').addClass('slide-show');
                                 }
                             }
                             else
                             {
-                                if($(this).find('svg').length && $(this).hasClass('slide-hide'))
-                                {
-                                    var cascade = 100;
-
-                                    $(this).find('path').each(function()
-                                    {
-                                        $(this).css({opacity: 0}).delay(cascade).animate({opacity: 1});
-                                        cascade += 25;
-                                    });
-                                }
-
-                                $(this).fadeIn().removeClass('slide-hide').addClass('slide-show');
+                                $(this).fadeOut().removeClass('slide-show').addClass('slide-hide');
                             }
-                        }
-                        else
-                        {
-                            $(this).fadeOut().removeClass('slide-show').addClass('slide-hide');
-                        }
-                    });
+                        });
 
-                    if($('.magic').index('.slide') == slide.number)
-                    {
-                        $('.magic audio').get(0).volume = 1;
-                        $('.magic audio').get(0).play();
-                    }
-                    else if($('.magic').index('.slide') == slide.number - 1)
-                    {
-                        $('.magic audio').animate({volume: 0.2}, 5000);
-                    }
-                    else if($('.magic').index('.slide') >= slide.number)
-                    {
-                        $('.magic audio').get(0).pause();
-                        $('.magic audio').get(0).currentTime = 0;
-                    }
+                        if($('.magic').index('.slide') == slide.number + 1)
+                        {
+                            socket.emit('incoming-magic');
+                        }
+                        else if($('.magic').index('.slide') == slide.number)
+                        {
+                            $('.magic audio').get(0).volume = 1;
+                            $('.magic audio').get(0).play();
+                        }
+                        else if($('.magic').index('.slide') == slide.number - 1)
+                        {
+                            $('.magic audio').animate({volume: 0.2}, 5000);
+                        }
+                        else if($('.magic').index('.slide') >= slide.number)
+                        {
+                            $('.magic audio').get(0).pause();
+                            $('.magic audio').get(0).currentTime = 0;
+                        }
+                    }, timeout);
                 });
 
 

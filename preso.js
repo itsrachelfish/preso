@@ -5,6 +5,9 @@ var express = require('express'),
     five = require("johnny-five"),
     users   = 0,
     slide   = 1,
+    offsets = {},
+    average = {},
+    magic   = 0,
     board, sensor;
 
 server.listen(1337);
@@ -30,15 +33,38 @@ io.sockets.on('connection', function (socket)
     socket.emit('status', {message: "Connected"});
     socket.emit('slide', {number: slide, name: "new"});
 
-    var lastPing;
+    var ping;
     var pingInterval = setInterval(function()
     {
-        socket.emit('ping', {ping: new Date().getTime(), last: lastPing});
+        socket.emit('ping', {ping: new Date().getTime(), last: ping});
     }, 1000);
 
     socket.on('pong', function(time)
     {
-        lastPing = (new Date().getTime() - time.ping) / 2;
+        ping = (new Date().getTime() - time.ping) / 2;
+
+        if(typeof offsets[socket.id] == "undefined")
+        {
+            offsets[socket.id] = [];
+        }
+        
+        offsets[socket.id].unshift(time.pong - time.ping - ping);
+        offsets[socket.id] = offsets[socket.id].slice(0, 100);
+
+        var total = 0;
+        for(var i = 0; i < offsets[socket.id].length; i++)
+        {
+            total += offsets[socket.id][i];
+        }
+
+        average[socket.id] = total / offsets[socket.id].length;
+    });
+
+    socket.on('incoming-magic', function() { magic = 1 });
+
+    socket.on('debug', function()
+    {
+        socket.emit('debug', average);
     });
 
     socket.on('disconnect', function ()
@@ -78,9 +104,20 @@ board.on("ready", function()
             else if(sensor.name == 'next') {
                 slide++;
             }
-            
+
             trigger = new Date();
-            io.sockets.emit('slide', {number: slide, type: sensor.name});
+            io.sockets.emit();
+
+            var sockets = io.sockets.clients();
+            for(var i = 0; i < sockets.length; i++)
+            {
+                if(magic && sensor.name == 'next')
+                    sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 1000});
+                else
+                    sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 100});
+            }
+
+            magic = 0;
             console.log(slide, sensor.name, sensor.value);
         }
     }
