@@ -46,7 +46,6 @@
 
                 socket.on('slide', function(slide)
                 {
-                    console.log(slide);
                     $('.slide').each(function()
                     {
                         if($(this).index('.slide') <= slide.number)
@@ -82,7 +81,22 @@
                         {
                             $(this).fadeOut().removeClass('slide-show').addClass('slide-hide');
                         }
-                    });                    
+                    });
+
+                    if($('.magic').index('.slide') == slide.number)
+                    {
+                        $('.magic audio').get(0).volume = 1;
+                        $('.magic audio').get(0).play();
+                    }
+                    else if($('.magic').index('.slide') == slide.number - 1)
+                    {
+                        $('.magic audio').animate({volume: 0.2}, 5000);
+                    }
+                    else if($('.magic').index('.slide') >= slide.number)
+                    {
+                        $('.magic audio').get(0).pause();
+                        $('.magic audio').get(0).currentTime = 0;
+                    }
                 });
 
 
@@ -120,13 +134,16 @@
             .ping { text-align: right; }
 
             .slide svg { position: absolute; }
-            .flower svg { bottom: 40px; width: 75px; height: 130px; }
+            .flower svg { bottom: 30px; width: 150px; height: 275px; }
             .welcome svg { width: 300px; height: 100px; opacity: 0.3 }
             .title svg {  width: 570px; height: 400px; }
-            .butterfly svg { bottom: 175px; left: 50px; width: 75px; height: 62px;  } 
+            .butterfly svg { bottom: 200px; left: 125px; width: 125px; height: 100px;  } 
             .sun svg { right: -100px; top:-100px; width: 375px; height: 350px; }
             .other-flower svg { bottom: 40px; right: 200px; width: 160px; height: 200px; }
             .leaf svg { bottom: 40px; right: 50px; width: 150px; height: 150px; }
+
+            .rainbow { text-align: center; }
+            .rainbow span { margin: -5px; padding: 0; font-size: 50pt; }
         </style>
     </head>
 
@@ -142,7 +159,7 @@
                 <div class="slide slide-hide leaf"><svg viewbox="0 0 150 150" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg4977"> <defs id="defs4979" /> <metadata id="metadata4982"> <rdf:RDF> <cc:Work rdf:about=""> <dc:format>image/svg+xml</dc:format> <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" /> <dc:title></dc:title> </cc:Work> </rdf:RDF> </metadata> <g transform="translate(0,-902.36218)" id="layer1"> <g transform="translate(-448.83649,318.53951)" id="g381"> <g id="g383"> <path d="m 481.117,624.927 c 2.174,2.174 4.348,4.348 6.521,6.521 2.02,-2.617 4.039,-5.235 6.059,-7.853 -8.29,-5.006 -10.459,-15.621 -17.467,-22.044 -1.621,2.785 -3.243,5.571 -4.864,8.356 9.4,2.542 14.38,14.662 21.707,20.453 4.957,3.919 12.062,-2.87 7.07,-7.07 -6.516,-5.484 -12.743,-11.345 -20.577,-14.913 -4.955,-2.258 -10.311,3.6 -6.059,7.853 8.713,8.716 17.364,17.479 25,27.174 3.502,4.448 11.189,-1.483 7.853,-6.059 -5.729,-7.855 -12.399,-14.801 -19.26,-21.663 -1.178,2.845 -2.356,5.69 -3.535,8.535 8.094,0.411 14.718,9.635 15.831,16.98 3.214,-0.886 6.429,-1.772 9.643,-2.658 -5.632,-14.052 -15.977,-38.997 -35.499,-32.84 -4.444,1.401 -5.097,8.592 0,9.643 9.97,2.056 15.816,13.308 22.065,20.37 7.472,8.444 16.753,12.127 27.439,7.387 -2.448,-1.882 -4.896,-3.765 -7.345,-5.646 -0.131,0.745 -0.259,1.385 -0.583,2.066 -2.274,4.776 4.082,10.783 7.853,6.059 9.017,-11.294 17.949,-23.16 30.51,-30.739 -2.508,-1.439 -5.016,-2.878 -7.523,-4.317 1.443,11.941 -17.969,19.876 -26.764,23.439 1.882,2.448 3.765,4.896 5.646,7.345 8.773,-13.93 22.873,-27.734 39.403,-31.397 -2.05,-2.05 -4.101,-4.101 -6.15,-6.15 -2.486,13.183 -19.07,19.592 -30.203,23.682 1.882,2.448 3.765,4.896 5.646,7.345 4.17,-9.436 18.742,-17.887 29.136,-16.181 -1.164,-2.05 -2.328,-4.101 -3.492,-6.15 -3.096,9.057 -14.274,12 -22.595,13.899 1.882,2.448 3.765,4.896 5.646,7.345 5.209,-8.919 17.236,-19.915 28.291,-19.263 -1.607,-2.109 -3.214,-4.22 -4.821,-6.329 -2.146,8.164 -9.677,13.148 -17.16,16.073 1.882,2.448 3.765,4.896 5.646,7.345 5.062,-7.918 11.836,-16.11 20.925,-19.441 -2.109,-1.607 -4.22,-3.214 -6.329,-4.821 -0.166,3.523 -1.817,7.754 -5.869,8.044 1.607,2.109 3.214,4.22 4.821,6.329 1.289,-6.844 6.285,-11.674 11.832,-15.49 -2.448,-0.996 -4.896,-1.992 -7.345,-2.988 0.887,4.47 -1.317,7.428 -5.806,5.806 1.164,2.05 2.328,4.101 3.492,6.15 1.063,-3.547 3.183,-6.071 6.397,-7.881 -2.508,-1.439 -5.016,-2.878 -7.523,-4.317 0.585,4.453 -1.731,6.872 -5.057,9.508 -5.054,4.004 2.074,11.03 7.07,7.07 5.172,-4.097 8.883,-9.752 7.986,-16.578 -0.48,-3.66 -3.899,-6.357 -7.523,-4.317 -5.453,3.069 -9.201,7.877 -10.993,13.857 -0.828,2.764 0.978,5.242 3.492,6.15 12.237,4.423 20.34,-6.85 18.106,-18.106 -0.603,-3.04 -4.791,-4.745 -7.345,-2.988 -7.576,5.212 -14.66,12.076 -16.428,21.467 -0.56,2.97 1.348,6.577 4.821,6.329 9.792,-0.7 15.428,-8.67 15.869,-18.044 0.145,-3.075 -3.336,-5.918 -6.329,-4.821 -11.721,4.296 -20.312,13.73 -26.901,24.037 -2.229,3.487 1.502,8.965 5.646,7.345 10.781,-4.213 21.053,-11.288 24.145,-23.058 0.862,-3.283 -1.577,-6.138 -4.821,-6.329 -14.562,-0.859 -30.006,12.366 -36.926,24.216 -2.29,3.922 1.445,8.304 5.646,7.345 12.274,-2.801 25.188,-8.037 29.579,-20.884 0.814,-2.381 -0.912,-5.727 -3.492,-6.15 -14.562,-2.391 -34.323,6.963 -40.429,20.776 -1.569,3.551 1.046,9.035 5.646,7.345 14.427,-5.3 33.984,-13.684 37.188,-30.666 0.718,-3.804 -2.244,-7.016 -6.15,-6.15 -19.031,4.217 -35.28,19.959 -45.38,35.993 -2.179,3.46 1.484,9.031 5.646,7.345 12.947,-5.245 36.204,-15.714 34.105,-33.082 -0.433,-3.582 -3.964,-6.465 -7.523,-4.317 -13.366,8.064 -22.935,20.278 -32.533,32.304 2.617,2.02 5.235,4.039 7.853,6.059 0.685,-1.438 1.315,-2.883 1.591,-4.455 0.796,-4.536 -3.211,-7.48 -7.345,-5.646 -8.751,3.882 -15.046,-5.263 -19.822,-11.22 -5.882,-7.338 -12.234,-15.536 -21.978,-17.545 0,3.214 0,6.429 0,9.643 12.378,-3.903 19.79,17.354 23.198,25.855 2.412,6.019 10.611,3.736 9.643,-2.658 -1.812,-11.962 -13.142,-23.696 -25.474,-24.322 -4.445,-0.226 -6.503,5.567 -3.535,8.535 6.234,6.238 12.485,12.497 17.695,19.64 2.617,-2.02 5.235,-4.039 7.853,-6.059 -7.635,-9.695 -16.286,-18.459 -25,-27.174 -2.02,2.617 -4.039,5.234 -6.059,7.853 7.096,3.232 12.651,8.382 18.554,13.349 2.356,-2.356 4.714,-4.714 7.07,-7.07 -9.135,-7.221 -14.121,-19.781 -26.119,-23.025 -4.695,-1.27 -8.638,4.898 -4.864,8.356 3.675,3.369 5.816,7.714 8.317,11.953 2.82,4.78 6.404,8.776 11.173,11.655 4.905,2.962 10.064,-3.848 6.059,-7.853 -2.174,-2.174 -4.348,-4.348 -6.521,-6.521 -4.56,-4.571 -11.631,2.5 -7.067,7.064 l 0,0 z" id="path385" style="fill:#8dc63f" /> </g> </g> <g transform="translate(-448.83649,318.53951)" id="g388"> <g id="g390"> <path d="m 544,720.305 c -1.485,-11.109 -8.625,-20.602 -13.868,-30.228 -5.681,-10.429 -8.398,-22.525 -7.538,-34.39 1.324,-18.243 14.516,-31.933 29.474,-40.259 6.255,-3.481 12.812,-6.549 19.717,-8.491 2.424,-0.682 4.669,-1.11 7.16,-0.958 0.765,0.047 0.421,-0.297 0.431,0.562 0.077,6.969 -6.499,12.87 -12.132,15.982 -7.578,4.187 -16.221,6.224 -24.164,9.599 -10.938,4.646 -19.921,11.893 -23.031,23.809 -1.63,6.246 8.016,8.894 9.643,2.658 4.607,-17.652 26.772,-19.79 40.834,-26.525 7.823,-3.746 13.768,-9.541 16.999,-17.629 2.204,-5.517 3.261,-12.887 -2.517,-16.644 -4.848,-3.152 -11.467,-1.739 -16.635,-0.285 -7.161,2.015 -14.048,5.339 -20.575,8.861 -15.439,8.33 -27.234,20.535 -32.941,37.549 -4.314,12.865 -2.443,27.224 1.552,39.904 2.128,6.753 5.962,12.979 9.48,19.07 3.034,5.255 7.288,11.247 8.112,17.413 0.841,6.296 10.852,6.379 9.999,0.002 l 0,0 z" id="path392" style="fill:#00a651" /> </g> </g> <g transform="translate(-448.83649,318.53951)" id="g394"> <g id="g396"> <path d="m 516.826,652.913 c -1.979,-15.941 -7.308,-31.742 -17.358,-44.437 -5.038,-6.364 -12.019,-11.202 -19.902,-13.218 -5.985,-1.531 -15.513,-2.561 -20.134,2.657 -8.606,9.721 7.52,25.074 13.779,31.329 13.909,13.899 31.612,22.475 39.732,41.409 2.535,5.911 11.147,0.812 8.635,-5.047 -7.053,-16.445 -20.777,-26.154 -34.229,-37.046 -4.206,-3.405 -8.052,-7.229 -11.69,-11.229 -3.237,-3.558 -6.992,-7.723 -8.398,-12.427 -0.401,-1.341 0.322,-0.609 -0.552,-0.253 2.702,-1.101 6.315,-0.444 9.069,0.011 6.905,1.14 12.275,5.665 16.62,10.884 8.373,10.059 12.838,24.556 14.429,37.365 0.783,6.315 10.792,6.391 9.999,0.002 l 0,0 z" id="path398" style="fill:#00a651" /> </g> </g> </g></svg>
             </article>
 
-            <article class="slide slide-wrap slide-box">
+            <article class="slide slide-wrap slide-hide slide-box">
                 <h1>Today's topics:</h1>
                 <ul class="slide slide-hide">
                     <li>WebSockets</li>
@@ -151,11 +168,17 @@
                 </ul>
 
                 <div class="slide slide-hide">
-                    All three are fun when used seperately, but with their powers combined you can do MAGIC!
+                    All three are fun by themselves, but together they make MAGIC!
                 </div>
+
+                <div class="slide slide-hide magic">
+                    <audio controls><source src='/music/ytcracker - bitcoin baron (v1 ssl lt).mp3' type='audio/mpeg'></audio>
+                </div>
+
+                <div class="slide slide-hide"></div>
             </article>
 
-            <article class="slide slide-wrap slide-box">
+            <article class="slide slide-wrap slide-hide slide-box">
                 <h1>What are WebSockets?</h1>
                 <ul class="slide slide-hide">
                     <li>A communication protocol between browsers and servers</li>
@@ -165,44 +188,72 @@
                 </ul>
             </article>
 
-            <article class="slide slide-wrap slide-box">
+            <article class="slide slide-wrap slide-hide slide-box">
                 <h1>What is Node.js?</h1>
                 <ul class="slide slide-hide">
                     <li>Server-side javascript</li>
-                    <li>You know how chrome is super fast at javascript? Node.js uses chrome's javacsript engine</li>
-                    <li>Easy to use with socket.io</li>
-                    <li>Pretty much the coolest thing ever</li>
+                    <li>Using chrome's javacsript engine</li>
+                    <li>As fast as compiled code</li>
+                    <li>More fun than PHP</li>
                 </ul>
             </article>
 
-            
-        <!--
-    
+            <article class="slide slide-wrap slide-hide slide-box">
+                <h1>What is Arduino?</h1>
+                <ul class="slide slide-hide">
+                    <li>A programmable development board</li>
+                    <li>Useful for collecting data from sensors, controlling motors, and making robots</li>
+                    <li>Many 3D printers are made with Arduino boards</li>
+                </ul>
+            </article>
 
-        Arduino
-            - A programmable development board
-            - Useful for collecting data from sensors, controlling motors, robots 
+            <article class="slide slide-wrap slide-hide slide-box">
+                <h1>Who uses this stuff?</h1>
+                <ul class="slide slide-hide">
+                    <li>Node is used by Walmart, Microsoft, Paypal, and The New York Times to name a few</li>
+                    <li>WebSockets are used by Stack Overflow, LinkedIn, and of course Trello</li>
+                </ul>
+            </article>
 
-        Who uses this stuff?
-            - Node is used by Walmart, Microsoft, Paypal, and The New York Times to name a few
-            - WebSockets are used by Stack Overflow, LinkedIn, and of course Trello
-            - Arduinos are used in 3d printers, robotics, and physical sensors
-        
-        What can we do with this stuff?
-            - WebSockets
-                - Change how users interact with our projects
-                - Real time communication between business and their users
+            <article class="slide slide-wrap slide-hide slide-box">
+                <h1>What can we do with this stuff?</h1>
+                <ul class="slide slide-hide">
+                    <li>WebSockets change how users interact with our projects</li>
+                    <li>Imagine real time communication between businesses and their users</li>
+                    <li>Interactive installations in REAL LIFE</li>
+                </ul>
+            </article>
 
-            - Node
-                - Would be more fun than PHP
+            <article class="slide slide-wrap slide-hide slide-box">
+                <div class="rainbow">
+                    <span style="color:hsla(24, 97%, 60%, 0.8); text-shadow:1px 1px #000;">T</span>
+                    <span style="color:hsla(48, 97%, 67%, 0.8); text-shadow:1px 1px #000;">h</span>
+                    <span style="color:hsla(72, 97%, 57%, 0.8); text-shadow:1px 1px #000;">a</span>
+                    <span style="color:hsla(96, 97%, 54%, 0.8); text-shadow:1px 1px #000;">n</span>
+                    <span style="color:hsla(120, 98%, 45%, 0.8); text-shadow:1px 1px #000;">k</span>
+                    <span style="color:hsla(144, 100%, 54%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
+                    <span style="color:hsla(168, 97%, 64%, 0.8); text-shadow:1px 1px #000;">y</span>
+                    <span style="color:hsla(192, 98%, 60%, 0.8); text-shadow:1px 1px #000;">o</span>
+                    <span style="color:hsla(216, 99%, 58%, 0.8); text-shadow:1px 1px #000;">u</span>
+                    <span style="color:hsla(240, 96%, 56%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
+                    <span style="color:hsla(264, 99%, 55%, 0.8); text-shadow:1px 1px #000;">f</span>
+                    <span style="color:hsla(288, 99%, 66%, 0.8); text-shadow:1px 1px #000;">o</span>
+                    <span style="color:hsla(312, 99%, 53%, 0.8); text-shadow:1px 1px #000;">r</span>
+                    <span style="color:hsla(336, 95%, 61%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
+                    <span style="color:hsla(0, 100%, 44%, 0.8); text-shadow:1px 1px #000;">l</span>
+                    <span style="color:hsla(24, 98%, 54%, 0.8); text-shadow:1px 1px #000;">i</span>
+                    <span style="color:hsla(48, 97%, 57%, 0.8); text-shadow:1px 1px #000;">s</span>
+                    <span style="color:hsla(72, 97%, 64%, 0.8); text-shadow:1px 1px #000;">t</span>
+                    <span style="color:hsla(96, 95%, 54%, 0.8); text-shadow:1px 1px #000;">e</span>
+                    <span style="color:hsla(120, 98%, 66%, 0.8); text-shadow:1px 1px #000;">n</span>
+                    <span style="color:hsla(144, 97%, 53%, 0.8); text-shadow:1px 1px #000;">i</span>
+                    <span style="color:hsla(168, 97%, 61%, 0.8); text-shadow:1px 1px #000;">n</span>
+                    <span style="color:hsla(192, 97%, 52%, 0.8); text-shadow:1px 1px #000;">g</span>
+                    <span style="color:hsla(216, 97%, 60%, 0.8); text-shadow:1px 1px #000;">!</span>
 
-            - Arduino
-                - Interactive installations in REAL LIFE
-
-
-            s/[\n ][\n ]+/ /
-       
-        -->
+                    <div><img class="slide slide-hide" src="https://i.imgur.com/3CoWaD3.gif" /></div>
+                </div>
+            </article>
         </section>
 
         <nav class="footer navbar navbar-inverse navbar-fixed-bottom" role="navigation">
