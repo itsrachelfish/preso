@@ -23,6 +23,10 @@ app.get('/admin', function (req, res)
   res.sendfile(__dirname + '/admin.html');
 });
 
+app.get('/time', function(req, res)
+{
+  res.sendfile(__dirname + '/time.html');
+});
 
 // Websocket magic
 io.sockets.on('connection', function (socket)
