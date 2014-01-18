@@ -2,13 +2,11 @@ var express = require('express'),
     app     = require('express')(),
     server  = require('http').createServer(app),
     io      = require('socket.io').listen(server),
-    five = require("johnny-five"),
     users   = 0,
     slide   = 1,
     offsets = {},
     average = {},
-    magic   = 0,
-    board, sensor;
+    magic   = 0;
 
 server.listen(1337);
 
@@ -18,6 +16,11 @@ app.use(express.static(__dirname + '/static'));
 app.get('/', function (req, res)
 {
   res.sendfile(__dirname + '/index.html');
+});
+
+app.get('/admin', function (req, res)
+{
+  res.sendfile(__dirname + '/admin.html');
 });
 
 
@@ -32,6 +35,12 @@ io.sockets.on('connection', function (socket)
     // Let the new user know they're connected
     socket.emit('status', {message: "Connected"});
     socket.emit('slide', {number: slide, name: "new"});
+
+    socket.on('slide', function(hax)
+    {
+        slide = hax.slide;
+        io.sockets.emit('slide', {number: slide, name: "hax"});
+    });
 
     var ping;
     var pingInterval = setInterval(function()
@@ -77,58 +86,3 @@ io.sockets.on('connection', function (socket)
     });
 });
 
-board = new five.Board();
-
-board.on("ready", function()
-{
-    prevSensor = new five.Sensor({
-        pin: "A0",
-        freq: 100
-      });
-
-    nextSensor = new five.Sensor({
-        pin: "A1",
-        freq: 100
-    });
-
-    board.repl.inject({sensor: sensor});
-
-    var trigger = new Date();
-    var handleSensor = function(sensor)
-    {
-        // Only send data over the socket ever 250ms
-        if(sensor.value > 500 && new Date() - trigger > 250)
-        {            
-            if(sensor.name == 'previous') {
-                if(slide > 0) slide--;
-            }
-            else if(sensor.name == 'next') {
-                slide++;
-            }
-
-            trigger = new Date();
-            io.sockets.emit();
-
-            var sockets = io.sockets.clients();
-            for(var i = 0; i < sockets.length; i++)
-            {
-                if(magic && sensor.name == 'next')
-                    sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 1000});
-                else
-                    sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 100});
-            }
-
-            magic = 0;
-        }
-    }
-
-    prevSensor.on("data", function()
-    {
-        handleSensor({name: 'previous', value: this.raw});
-    });
-
-    nextSensor.on("data", function()
-    {
-        handleSensor({name: 'next', value: this.raw});
-    });
-});

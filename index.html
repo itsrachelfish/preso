@@ -23,7 +23,7 @@
             
             $(document).ready(function()
             {
-                socket = io.connect('http://192.168.2.144');
+                socket = io.connect('http://192.168.0.108');
 
                 socket.on('debug', function(output)
                 {
@@ -108,7 +108,8 @@
                         else if($('.magic').index('.slide') == slide.number)
                         {
                             $('.magic audio').get(0).volume = 1;
-                            $('.magic audio').get(0).play();
+//                            $('.magic audio').get(0).play();
+                            document.getElementById('magic').play();
                         }
                         else if($('.magic').index('.slide') == slide.number - 1)
                         {
@@ -150,6 +151,11 @@
 
             .title-box { position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: #fff; }
             .slide-box { font-size: 30pt; background-color: #fff; padding:0.25em 1em; border: 1px solid #ccc; border-radius: 8px; position: fixed; top: 50px; bottom: 100px; left: 5%; right: 5%  }
+
+            .slide-box { -webkit-box-shadow: 0px 5px 30px -4px rgba(50, 50, 50, 0.8);
+                            -moz-box-shadow:    0px 5px 30px -4px rgba(50, 50, 50, 0.8);
+                            box-shadow:         0px 5px 30px -4px rgba(50, 50, 50, 0.8); }
+                            
             .slide-hide { display: none; }
             .slide-show { display: inline; }
 
@@ -195,7 +201,7 @@
                 </div>
 
                 <div class="slide slide-hide magic">
-                    <audio controls><source src='/music/ytcracker - bitcoin baron (v1 ssl lt).mp3' type='audio/mpeg'></audio>
+                    <audio id="magic" preload="auto" controls><source src='/music/ytcracker - bitcoin baron (v1 ssl lt).mp3' type='audio/mpeg'></audio>
                 </div>
 
                 <div class="slide slide-hide"></div>
