@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>swag▕▏swag▕▏swag▕▏swag▕▏swag▕▏</title>
+        <!-- ANTI-USERISM!!! <meta name="viewport" content="user-scalable=no"> -->
         
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/jquery-1.9.1.min.js"></script>
@@ -30,7 +31,7 @@
                     $('.splash').fadeOut();
                 });
                 
-                socket = io.connect('http://192.168.0.108');
+                socket = io.connect(window.location.host);
 
                 socket.on('debug', function(output)
                 {
@@ -177,7 +178,7 @@
             .slide svg { position: absolute; }
             .flower svg { bottom: 30px; width: 150px; height: 275px; }
             .welcome svg { width: 300px; height: 100px; opacity: 0.3 }
-            .title svg {  width: 570px; height: 400px; }
+            .title svg {   max-width: 100%; max-height: 75%; }
             .butterfly svg { bottom: 200px; left: 125px; width: 125px; height: 100px;  } 
             .sun svg { right: -100px; top:-100px; width: 375px; height: 350px; }
             .other-flower svg { bottom: 40px; right: 200px; width: 160px; height: 200px; }

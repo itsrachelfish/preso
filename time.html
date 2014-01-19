@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>swag▕▏swag▕▏swag▕▏swag▕▏swag▕▏</title>
+        
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/jquery-1.9.1.min.js"></script>
+
+        <script>
+            $(document).ready(function()
+            {
+                var offset = 0;
+                
+                setInterval(function()
+                {
+                    var date = new Date();
+                    date.setTime(date.getTime() + offset);
+                    
+                    var text = [
+                        date.getFullYear(),
+                        date.getMonth(),
+                        date.getDay(),
+                        date.getHours(),
+                        date.getMinutes(),
+                        date.getSeconds(),
+                        date.getMilliseconds()
+                    ];
+                    
+                    $('#time').text(text.join(" "));
+                    $('#offset').text(offset);
+                }, 1);
+
+                $('body').on('keydown', function(event)
+                {
+                    var value = 1;
+
+                    if(event.shiftKey)
+                        value *= 10;
+                    
+                    if(event.which == 38) // Up
+                        offset += value;
+                    else if(event.which == 40) // Down
+                        offset -= value;;
+
+                    console.log(event);
+                });
+            });
+        </script>
+
+        <style>
+            body { font-size: 500%; }
+        </style>
+    </head>
+
+    <body>
+        The time is...
+        <div id='time'></div>
+        <div id='offset'></div>
+    </body>
+</html>

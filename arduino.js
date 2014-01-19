@@ -36,7 +36,7 @@ board.on("ready", function()
             for(var i = 0; i < sockets.length; i++)
             {
                 if(magic && sensor.name == 'next')
-                    sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 1000});
+                    sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 10000});
                 else
                     sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 100});
             }
