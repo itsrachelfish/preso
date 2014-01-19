@@ -35,6 +35,9 @@
 
                     if(event.shiftKey)
                         value *= 10;
+
+                    if(event.ctrlKey)
+                        value *= 10;
                     
                     if(event.which == 38) // Up
                         offset += value;
