@@ -11,3 +11,9 @@ Time
     - Bi-directional ping calculating magic clock offset generation
     - Seriously, what?
 
+Refactor
+    - Refactor next/previous to work independently from the arduino
+    - Use sockets to connect the arduino to a remote server
+
+Admin
+    - Next/previous buttons from the admin panel
