@@ -5,7 +5,14 @@
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/jquery-1.9.1.min.js"></script>
 
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+
+        <script src="/js/bootstrap.min.js"></script>
+
         <script>
+            var socket;
+            
             $(document).ready(function()
             {
                 var offset = 0;
@@ -46,17 +53,62 @@
 
                     console.log(event);
                 });
+
+
+
+                // Node.js stuff
+
+                socket = io.connect(window.location.host);
+
+                socket.on('status', function(status)
+                {
+                    $('.footer .status a').text(status.message);
+                });
+                   
+                socket.on('users', function(users)
+                {
+                    $('.footer .users a').text('Users: '+users.count);
+                });
+
+                socket.on('time', function(time)
+                {
+                    var clientTime = new Date().getTime();
+                    offset = time.serverTime - clientTime;
+                });
+
+                socket.on('ping', function(ping)
+                {
+                    if(typeof ping.last != "undefined")
+                    {
+                        $('.footer .ping a').text('Ping: '+ping.last.toFixed(1)+'ms');
+                    }
+                    
+                    ping.pong = new Date().getTime();
+                    socket.emit('pong', ping);
+                });
             });
         </script>
 
         <style>
-            body { font-size: 500%; }
+            .time-wrap { font-size: 500%; }
+            .users { text-align: center; }
+            .ping { text-align: right; }
         </style>
     </head>
 
     <body>
-        The time is...
-        <div id='time'></div>
-        <div id='offset'></div>
+        <div class="time-wrap">
+            The server's time is...
+            <div id='time'></div>
+            <div id='offset'></div>
+        </div>
+        
+        <nav class="footer navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+            <ul class="nav navbar-nav col-md-12">
+                <li class="status active col-md-4"><a>Loading...</a></li>
+                <li class="users col-md-4"><a></a></li>
+                <li class="ping col-md-4"><a></a></li>
+            </ul>
+        </nav>
     </body>
 </html>
