@@ -1,5 +1,11 @@
-var five = require("johnny-five"), board, sensor;
+// Usage: run this with the server you're connecting to as an argument:
+// user@host:~/preso$ node arduino.js 192.168.1.100
 
+var net = require('net');
+var client = new net.Socket();
+client.connect(9001, process.argv[2]);
+
+var five = require("johnny-five"), board, sensor;
 board = new five.Board();
 
 board.on("ready", function()
@@ -19,29 +25,12 @@ board.on("ready", function()
     var trigger = new Date();
     var handleSensor = function(sensor)
     {
-        // Only send data over the socket ever 250ms
+        // Only send data over the socket every 250ms
         if(sensor.value > 500 && new Date() - trigger > 250)
-        {            
-            if(sensor.name == 'previous') {
-                if(slide > 0) slide--;
-            }
-            else if(sensor.name == 'next') {
-                slide++;
-            }
-
+        {
             trigger = new Date();
-            io.sockets.emit();
-
-            var sockets = io.sockets.clients();
-            for(var i = 0; i < sockets.length; i++)
-            {
-                if(magic && sensor.name == 'next')
-                    sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 10000});
-                else
-                    sockets[i].emit('slide', {number: slide, type: sensor.name, time: new Date().getTime() + average[sockets[i].id] + 100});
-            }
-
-            magic = 0;
+            client.write(sensor.name);
+            console.log("sending "+sensor.name);
         }
     }
 
