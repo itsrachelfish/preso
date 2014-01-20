@@ -27,6 +27,26 @@ app.get('/time', function(req, res)
   res.sendfile(__dirname + '/time.html');
 });
 
+
+// Function to control slides
+// Used by the remote admin interface and arduino
+var handleAction = function(action)
+{
+    if(action.name == 'previous') {
+        if(slide > 0) slide--;
+    }
+    else if(action.name == 'next') {
+        slide++;
+    }
+
+    if(magic && action.name == 'next')
+        io.sockets.emit('slide', {number: slide, time: new Date().getTime() + 1000 });
+    else
+        io.sockets.emit('slide', {number: slide, time: new Date().getTime() + 100 });
+
+    magic = 0;
+}
+
 // Websocket magic
 io.sockets.on('connection', function (socket)
 {
@@ -42,19 +62,7 @@ io.sockets.on('connection', function (socket)
 
     socket.on('action', function(action)
     {
-        if(action.name == 'previous') {
-            if(slide > 0) slide--;
-        }
-        else if(action.name == 'next') {
-            slide++;
-        }
-
-        if(magic && action.name == 'next')
-            io.sockets.emit('slide', {number: slide, time: new Date().getTime() + 1000 });
-        else
-            io.sockets.emit('slide', {number: slide, time: new Date().getTime() + 100 });
-
-        magic = 0;
+        handleAction(action);
     });
 
     var ping;
@@ -82,6 +90,21 @@ io.sockets.on('connection', function (socket)
         users--;
         
         io.sockets.emit('users', {count: users});
+    });
+});
+
+var net = require('net');
+var server = net.createServer();
+server.listen(9001, '0.0.0.0');
+
+server.on('connection', function(sock)
+{   
+    sock.on('data', function(data)
+    {
+        if(data == "previous")
+            handleAction({name: 'previous'});
+        else if(data == "next")
+            handleAction({name: 'next'});        
     });
 });
 
