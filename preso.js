@@ -3,10 +3,9 @@ var express = require('express'),
     server  = require('http').createServer(app),
     io      = require('socket.io').listen(server),
     users   = 0,
-    slide   = 1,
-    offsets = {},
-    average = {},
-    magic   = 0;
+    magic   = 0
+    slide   = 1;
+
 
 server.listen(1337);
 
@@ -39,11 +38,23 @@ io.sockets.on('connection', function (socket)
     // Let the new user know they're connected
     socket.emit('status', {message: "Connected"});
     socket.emit('slide', {number: slide, name: "new"});
+    socket.emit('time', {serverTime: new Date().getTime()});
 
-    socket.on('slide', function(hax)
+    socket.on('action', function(action)
     {
-        slide = hax.slide;
-        io.sockets.emit('slide', {number: slide, name: "hax"});
+        if(action.name == 'previous') {
+            if(slide > 0) slide--;
+        }
+        else if(action.name == 'next') {
+            slide++;
+        }
+
+        if(magic && action.name == 'next')
+            io.sockets.emit('slide', {number: slide, time: new Date().getTime() + 1000 });
+        else
+            io.sockets.emit('slide', {number: slide, time: new Date().getTime() + 100 });
+
+        magic = 0;
     });
 
     var ping;
@@ -55,22 +66,6 @@ io.sockets.on('connection', function (socket)
     socket.on('pong', function(time)
     {
         ping = (new Date().getTime() - time.ping) / 2;
-
-        if(typeof offsets[socket.id] == "undefined")
-        {
-            offsets[socket.id] = [];
-        }
-        
-        offsets[socket.id].unshift(time.pong - time.ping - ping);
-        offsets[socket.id] = offsets[socket.id].slice(0, 100);
-
-        var total = 0;
-        for(var i = 0; i < offsets[socket.id].length; i++)
-        {
-            total += offsets[socket.id][i];
-        }
-
-        average[socket.id] = total / offsets[socket.id].length;
     });
 
     socket.on('incoming-magic', function() { magic = 1 });
@@ -86,7 +81,7 @@ io.sockets.on('connection', function (socket)
         clearInterval(pingInterval);
         users--;
         
-        io.sockets.emit('users', {users: users});
+        io.sockets.emit('users', {count: users});
     });
 });
 

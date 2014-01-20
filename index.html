@@ -14,6 +14,8 @@
 
         <script>
             var socket;
+            var average;
+            var offsets = [];
             
             /**
              * StyleFix 1.0.3 & PrefixFree 1.0.7
@@ -32,6 +34,13 @@
                 });
                 
                 socket = io.connect(window.location.host);
+
+                socket.on('time', function(time)
+                {
+                    var clientTime = new Date().getTime();
+                    average = time.serverTime - clientTime;
+                    offsets.push(average);
+                });
 
                 socket.on('debug', function(output)
                 {
@@ -60,6 +69,20 @@
                     {
                         $('.footer .ping a').text('Ping: '+ping.last.toFixed(1)+'ms');
                     }
+
+                    var clientTime = new Date().getTime();
+                    offsets.unshift(ping.ping - clientTime);
+                    offsets = offsets.slice(0, 10);
+
+                    console.log(average, ping.ping - clientTime);
+
+                    var total = 0;
+                    for(var i = 0; i < offsets.length; i++)
+                    {
+                        total += offsets[i];
+                    }
+
+                    average = total / offsets.length;
                     
                     ping.pong = new Date().getTime();
                     socket.emit('pong', ping);
@@ -67,7 +90,14 @@
 
                 socket.on('slide', function(slide)
                 {
-                    var timeout = slide.time - new Date().getTime();
+                    var date = new Date();
+                    date.setTime(date.getTime() + average);
+
+                    var timeout = slide.time - date.getTime();
+
+
+                console.log(timeout);
+
                     if(timeout < 0) timeout = 0;
                     
                     setTimeout(function()
@@ -178,7 +208,7 @@
             .slide svg { position: absolute; }
             .flower svg { bottom: 30px; width: 150px; height: 275px; }
             .welcome svg { width: 300px; height: 100px; opacity: 0.3 }
-            .title svg {   max-width: 100%; max-height: 75%; }
+            .title svg {  width: 570px; height: 400px; }
             .butterfly svg { bottom: 200px; left: 125px; width: 125px; height: 100px;  } 
             .sun svg { right: -100px; top:-100px; width: 375px; height: 350px; }
             .other-flower svg { bottom: 40px; right: 200px; width: 160px; height: 200px; }
@@ -190,12 +220,14 @@
     </head>
 
     <body>
+        <!--
         <section class="splash">
             <h2>Welcome to Rachel's preso.</h2>
             <p>By clicking "yes" in this prompt you agree that Rachel is the coolest.</p>
             <a class="accept">Yes</a>
             <a class="deny">No</a>
         </section>
+        -->
         
         <section class="slides">
             <article class="slide slide-wrap title-box">

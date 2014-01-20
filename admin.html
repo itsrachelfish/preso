@@ -1,1 +1,78 @@
-THIS IS THE ADMIN PAGE
+<html>
+    <head>
+        <title>swag▕▏swag▕▏swag▕▏swag▕▏swag▕▏</title>
+        
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/jquery-1.9.1.min.js"></script>
+
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+
+        <script src="/js/bootstrap.min.js"></script>
+
+        <script>
+            var socket;
+            
+            $(document).ready(function()
+            {
+                // Node.js stuff
+
+                socket = io.connect(window.location.host);
+
+                socket.on('status', function(status)
+                {
+                    $('.footer .status a').text(status.message);
+                });
+                   
+                socket.on('users', function(users)
+                {
+                    $('.footer .users a').text('Users: '+users.count);
+                });
+
+                socket.on('ping', function(ping)
+                {
+                    if(typeof ping.last != "undefined")
+                    {
+                        $('.footer .ping a').text('Ping: '+ping.last.toFixed(1)+'ms');
+                    }
+                    
+                    ping.pong = new Date().getTime();
+                    socket.emit('pong', ping);
+                });
+
+                $('body').on('click', '.next', function()
+                {
+                    socket.emit('action', {name: 'next'});
+                });
+
+                $('body').on('click', '.prev', function()
+                {
+                    socket.emit('action', {name: 'previous'});
+                });
+            });
+        </script>
+
+        <style>
+            .users { text-align: center; }
+            .ping { text-align: right; }
+
+            .next { background-color: #ccc; top: 25%; position: fixed; bottom: 25%; right: 0; left: 90% }
+            .prev { background-color: #ccc; top: 25%; position: fixed; bottom: 25%; left: 0; right: 90% }
+        </style>
+    </head>
+
+    <body>
+        THIS IS THE ADMIN PAGE
+
+        <div class="next">next</div>
+        <div class="prev">prev</div>
+        
+        <nav class="footer navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+            <ul class="nav navbar-nav col-md-12">
+                <li class="status active col-md-4"><a>Loading...</a></li>
+                <li class="users col-md-4"><a></a></li>
+                <li class="ping col-md-4"><a></a></li>
+            </ul>
+        </nav>
+    </body>
+</html>
