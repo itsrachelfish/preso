@@ -74,8 +74,6 @@
                     offsets.unshift(ping.ping - clientTime);
                     offsets = offsets.slice(0, 10);
 
-                    console.log(average, ping.ping - clientTime);
-
                     var total = 0;
                     for(var i = 0; i < offsets.length; i++)
                     {
@@ -94,10 +92,6 @@
                     date.setTime(date.getTime() + average);
 
                     var timeout = slide.time - date.getTime();
-
-
-                console.log(timeout);
-
                     if(timeout < 0) timeout = 0;
                     
                     setTimeout(function()
@@ -191,7 +185,24 @@
                     $('body').height(window.innerHeight);
 
                     $('.slides').height($('body').height() - $('nav').height());
-                    $('.slide-wrap').height($('body').height() - $('nav').height());
+                    $('.title-box').height($('body').height() - $('nav').height());
+
+                    $('.slide-wrap').each(function()
+                    {
+                        $(this).removeAttr('style');
+                        
+                        if($(this).height() < $(this).find('.slide-inner').height())
+                        {
+                            var fontSize = parseInt($(this).css('font-size'));
+                            for(var size = fontSize; size > 0; size--)
+                            {
+                                $(this).css('font-size', size);
+
+                                 if($(this).height() > $(this).find('.slide-inner').height())
+                                    break;
+                            } 
+                        }
+                    });
                     
                     $('.title svg').css({
                         left: $('.slides').width() / 2 - $('.title svg').width() / 2,
@@ -228,7 +239,8 @@
 
             .slides { position: relative; }
             .slide-wrap { position: relative; }
-
+            .slide-inner { padding: 10px; }
+            
             .title-box { position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: #fff; }
             .slide-box { font-size: 30pt; background-color: #fff; padding:0.25em 1em; border: 1px solid #ccc; border-radius: 8px; position: fixed; top: 50px; bottom: 100px; left: 5%; right: 5%  }
 
@@ -278,98 +290,112 @@
             </article>
 
             <article class="slide slide-wrap slide-hide slide-box">
-                <h1>Today's topics:</h1>
-                <ul class="slide slide-hide">
-                    <li>WebSockets</li>
-                    <li>Node.js</li>
-                    <li>Arduino!</li>
-                </ul>
+                <div class="slide-inner">
+                    <h1>Today's topics:</h1>
+                    <ul class="slide slide-hide">
+                        <li>WebSockets</li>
+                        <li>Node.js</li>
+                        <li>Arduino!</li>
+                    </ul>
 
-                <div class="slide slide-hide">
-                    All three are fun by themselves, but together they make MAGIC!
+                    <div class="slide slide-hide">
+                        All three are fun by themselves, but together they make MAGIC!
+                    </div>
+
+                    <div class="slide slide-hide magic">
+                        <audio id="magic" preload="auto" controls><source src='/music/ytcracker - bitcoin baron (v1 ssl lt).mp3' type='audio/mpeg'></audio>
+                    </div>
+
+                    <div class="slide slide-hide"></div>
                 </div>
+            </article>
 
-                <div class="slide slide-hide magic">
-                    <audio id="magic" preload="auto" controls><source src='/music/ytcracker - bitcoin baron (v1 ssl lt).mp3' type='audio/mpeg'></audio>
+            <article class="slide slide-wrap slide-hide slide-box">
+                <div class="slide-inner">
+                    <h1>What are WebSockets?</h1>
+                    <ul class="slide slide-hide">
+                        <li>A communication protocol between browsers and servers</li>
+                        <li>Useful for creating collaborative applications, games, and chat</li>
+                        <li>Easy to use with socket.io</li>
+                        <li>Pretty much the coolest thing ever</li>
+                    </ul>
                 </div>
-
-                <div class="slide slide-hide"></div>
             </article>
 
             <article class="slide slide-wrap slide-hide slide-box">
-                <h1>What are WebSockets?</h1>
-                <ul class="slide slide-hide">
-                    <li>A communication protocol between browsers and servers</li>
-                    <li>Useful for creating collaborative applications, games, and chat</li>
-                    <li>Easy to use with socket.io</li>
-                    <li>Pretty much the coolest thing ever</li>
-                </ul>
+                <div class="slide-inner">
+                    <h1>What is Node.js?</h1>
+                    <ul class="slide slide-hide">
+                        <li>Server-side javascript</li>
+                        <li>Using chrome's javacsript engine</li>
+                        <li>As fast as compiled code</li>
+                        <li>More fun than PHP</li>
+                    </ul>
+                </div>
             </article>
 
             <article class="slide slide-wrap slide-hide slide-box">
-                <h1>What is Node.js?</h1>
-                <ul class="slide slide-hide">
-                    <li>Server-side javascript</li>
-                    <li>Using chrome's javacsript engine</li>
-                    <li>As fast as compiled code</li>
-                    <li>More fun than PHP</li>
-                </ul>
+                <div class="slide-inner">
+                    <h1>What is Arduino?</h1>
+                    <ul class="slide slide-hide">
+                        <li>A programmable development board</li>
+                        <li>Useful for collecting data from sensors, controlling motors, and making robots</li>
+                        <li>Many 3D printers are made with Arduino boards</li>
+                    </ul>
+                </div>
             </article>
 
             <article class="slide slide-wrap slide-hide slide-box">
-                <h1>What is Arduino?</h1>
-                <ul class="slide slide-hide">
-                    <li>A programmable development board</li>
-                    <li>Useful for collecting data from sensors, controlling motors, and making robots</li>
-                    <li>Many 3D printers are made with Arduino boards</li>
-                </ul>
+                <div class="slide-inner">
+                    <h1>Who uses this stuff?</h1>
+                    <ul class="slide slide-hide">
+                        <li>Node is used by Walmart, Microsoft, Paypal, and The New York Times to name a few</li>
+                        <li>WebSockets are used by Stack Overflow, LinkedIn, and of course Trello</li>
+                    </ul>
+                </div>
             </article>
 
             <article class="slide slide-wrap slide-hide slide-box">
-                <h1>Who uses this stuff?</h1>
-                <ul class="slide slide-hide">
-                    <li>Node is used by Walmart, Microsoft, Paypal, and The New York Times to name a few</li>
-                    <li>WebSockets are used by Stack Overflow, LinkedIn, and of course Trello</li>
-                </ul>
+                <div class="slide-inner">
+                    <h1>What can we do with this stuff?</h1>
+                    <ul class="slide slide-hide">
+                        <li>WebSockets change how users interact with our projects</li>
+                        <li>Imagine real time communication between businesses and their users</li>
+                        <li>Interactive installations in REAL LIFE</li>
+                    </ul>
+                </div>
             </article>
 
             <article class="slide slide-wrap slide-hide slide-box">
-                <h1>What can we do with this stuff?</h1>
-                <ul class="slide slide-hide">
-                    <li>WebSockets change how users interact with our projects</li>
-                    <li>Imagine real time communication between businesses and their users</li>
-                    <li>Interactive installations in REAL LIFE</li>
-                </ul>
-            </article>
+                <div class="slide-inner">
+                    <div class="rainbow">
+                        <span style="color:hsla(24, 97%, 60%, 0.8); text-shadow:1px 1px #000;">T</span>
+                        <span style="color:hsla(48, 97%, 67%, 0.8); text-shadow:1px 1px #000;">h</span>
+                        <span style="color:hsla(72, 97%, 57%, 0.8); text-shadow:1px 1px #000;">a</span>
+                        <span style="color:hsla(96, 97%, 54%, 0.8); text-shadow:1px 1px #000;">n</span>
+                        <span style="color:hsla(120, 98%, 45%, 0.8); text-shadow:1px 1px #000;">k</span>
+                        <span style="color:hsla(144, 100%, 54%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
+                        <span style="color:hsla(168, 97%, 64%, 0.8); text-shadow:1px 1px #000;">y</span>
+                        <span style="color:hsla(192, 98%, 60%, 0.8); text-shadow:1px 1px #000;">o</span>
+                        <span style="color:hsla(216, 99%, 58%, 0.8); text-shadow:1px 1px #000;">u</span>
+                        <span style="color:hsla(240, 96%, 56%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
+                        <span style="color:hsla(264, 99%, 55%, 0.8); text-shadow:1px 1px #000;">f</span>
+                        <span style="color:hsla(288, 99%, 66%, 0.8); text-shadow:1px 1px #000;">o</span>
+                        <span style="color:hsla(312, 99%, 53%, 0.8); text-shadow:1px 1px #000;">r</span>
+                        <span style="color:hsla(336, 95%, 61%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
+                        <span style="color:hsla(0, 100%, 44%, 0.8); text-shadow:1px 1px #000;">l</span>
+                        <span style="color:hsla(24, 98%, 54%, 0.8); text-shadow:1px 1px #000;">i</span>
+                        <span style="color:hsla(48, 97%, 57%, 0.8); text-shadow:1px 1px #000;">s</span>
+                        <span style="color:hsla(72, 97%, 64%, 0.8); text-shadow:1px 1px #000;">t</span>
+                        <span style="color:hsla(96, 95%, 54%, 0.8); text-shadow:1px 1px #000;">e</span>
+                        <span style="color:hsla(120, 98%, 66%, 0.8); text-shadow:1px 1px #000;">n</span>
+                        <span style="color:hsla(144, 97%, 53%, 0.8); text-shadow:1px 1px #000;">i</span>
+                        <span style="color:hsla(168, 97%, 61%, 0.8); text-shadow:1px 1px #000;">n</span>
+                        <span style="color:hsla(192, 97%, 52%, 0.8); text-shadow:1px 1px #000;">g</span>
+                        <span style="color:hsla(216, 97%, 60%, 0.8); text-shadow:1px 1px #000;">!</span>
 
-            <article class="slide slide-wrap slide-hide slide-box">
-                <div class="rainbow">
-                    <span style="color:hsla(24, 97%, 60%, 0.8); text-shadow:1px 1px #000;">T</span>
-                    <span style="color:hsla(48, 97%, 67%, 0.8); text-shadow:1px 1px #000;">h</span>
-                    <span style="color:hsla(72, 97%, 57%, 0.8); text-shadow:1px 1px #000;">a</span>
-                    <span style="color:hsla(96, 97%, 54%, 0.8); text-shadow:1px 1px #000;">n</span>
-                    <span style="color:hsla(120, 98%, 45%, 0.8); text-shadow:1px 1px #000;">k</span>
-                    <span style="color:hsla(144, 100%, 54%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
-                    <span style="color:hsla(168, 97%, 64%, 0.8); text-shadow:1px 1px #000;">y</span>
-                    <span style="color:hsla(192, 98%, 60%, 0.8); text-shadow:1px 1px #000;">o</span>
-                    <span style="color:hsla(216, 99%, 58%, 0.8); text-shadow:1px 1px #000;">u</span>
-                    <span style="color:hsla(240, 96%, 56%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
-                    <span style="color:hsla(264, 99%, 55%, 0.8); text-shadow:1px 1px #000;">f</span>
-                    <span style="color:hsla(288, 99%, 66%, 0.8); text-shadow:1px 1px #000;">o</span>
-                    <span style="color:hsla(312, 99%, 53%, 0.8); text-shadow:1px 1px #000;">r</span>
-                    <span style="color:hsla(336, 95%, 61%, 0.8); text-shadow:1px 1px #000;">&ensp;</span>
-                    <span style="color:hsla(0, 100%, 44%, 0.8); text-shadow:1px 1px #000;">l</span>
-                    <span style="color:hsla(24, 98%, 54%, 0.8); text-shadow:1px 1px #000;">i</span>
-                    <span style="color:hsla(48, 97%, 57%, 0.8); text-shadow:1px 1px #000;">s</span>
-                    <span style="color:hsla(72, 97%, 64%, 0.8); text-shadow:1px 1px #000;">t</span>
-                    <span style="color:hsla(96, 95%, 54%, 0.8); text-shadow:1px 1px #000;">e</span>
-                    <span style="color:hsla(120, 98%, 66%, 0.8); text-shadow:1px 1px #000;">n</span>
-                    <span style="color:hsla(144, 97%, 53%, 0.8); text-shadow:1px 1px #000;">i</span>
-                    <span style="color:hsla(168, 97%, 61%, 0.8); text-shadow:1px 1px #000;">n</span>
-                    <span style="color:hsla(192, 97%, 52%, 0.8); text-shadow:1px 1px #000;">g</span>
-                    <span style="color:hsla(216, 97%, 60%, 0.8); text-shadow:1px 1px #000;">!</span>
-
-                    <div><img class="slide slide-hide" src="/img/bees.gif" /></div>
+                        <div><img class="slide slide-hide" src="/img/bees.gif" /></div>
+                    </div>
                 </div>
             </article>
         </section>
