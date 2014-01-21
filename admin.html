@@ -44,7 +44,7 @@
                         socket.emit('pong', ping);
                     });
                     
-                    $('.next, .prev').fadeIn();
+                    $('body > div').fadeIn();
                     
                     $('body').on('click', '.next', function()
                     {
@@ -55,6 +55,11 @@
                     {
                         socket.emit('action', {name: 'previous'});
                     });
+
+                    $('body').on('click', '.abort', function()
+                    {
+                        socket.emit('abort');
+                    });
                 });
             });
         </script>
@@ -63,8 +68,12 @@
             .users { text-align: center; }
             .ping { text-align: right; }
 
-            .next { background-color: green; display: none; top: 25%; position: fixed; bottom: 25%; right: 0; left: 80% }
-            .prev { background-color: red; display: none; top: 25%; position: fixed; bottom: 25%; left: 0; right: 80% }
+            body > div { display: none; }
+
+            .abort { border: 10px solid red; font-size: 30pt; margin: 10% 40%; }
+            .start { border: 10px solid green; font-size: 30pt;  margin: 10% 40%; }
+            .next { background-color: green; top: 25%; position: fixed; bottom: 25%; right: 0; left: 80% }
+            .prev { background-color: red; top: 25%; position: fixed; bottom: 25%; left: 0; right: 80% }
         </style>
     </head>
 
@@ -73,6 +82,9 @@
 
         <div class="next">next</div>
         <div class="prev">prev</div>
+        <div class="abort">ABORT!!!!!</div>
+<!--        <div class="start">Start de music</div> -->
+
         
         <nav class="footer navbar navbar-inverse navbar-fixed-bottom" role="navigation">
             <ul class="nav navbar-nav col-md-12">

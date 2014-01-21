@@ -5,6 +5,7 @@ var express = require('express'),
     app     = require('express')(),
     server  = require('http').createServer(app),
     io      = require('socket.io').listen(server),
+    auth    = {},
     users   = 0,
     magic   = 0
     slide   = 1;
@@ -65,7 +66,15 @@ io.sockets.on('connection', function (socket)
 
     socket.on('action', function(action)
     {
-        handleAction(action);
+        // Only accept actions from authed users
+        if(typeof auth[socket.id] != "undefined" && auth[socket.id])
+            handleAction(action);
+    });
+
+    socket.on('abort', function()
+    {
+        if(typeof auth[socket.id] != "undefined" && auth[socket.id])
+            io.sockets.emit('abort');
     });
 
     var ping;
@@ -80,7 +89,6 @@ io.sockets.on('connection', function (socket)
     });
 
     socket.on('incoming-magic', function() { magic = 1 });
-    socket.on('abort', function() { io.sockets.emit('abort') });
 
     socket.on('debug', function()
     {
@@ -91,6 +99,7 @@ io.sockets.on('connection', function (socket)
     {
         if(password.value == process.argv[2])
         {
+            auth[socket.id] = true;
             socket.emit('authenticated');
             socket.emit('status', {message: 'Authenticated'});
             socket.emit('users', {count: users});
