@@ -87,6 +87,16 @@ io.sockets.on('connection', function (socket)
         socket.emit('debug', average);
     });
 
+    socket.on('password', function(password)
+    {
+        if(password.value == process.argv[2])
+        {
+            socket.emit('authenticated');
+            socket.emit('status', {message: 'Authenticated'});
+            socket.emit('users', {count: users});
+        }
+    });
+
     socket.on('disconnect', function ()
     {
         clearInterval(pingInterval);

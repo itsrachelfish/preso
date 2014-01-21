@@ -155,7 +155,8 @@ $(document).ready(function()
 
         $('.slide-wrap').each(function()
         {
-            $(this).removeAttr('style');
+            if(!$(this).hasClass('title-box'))
+                $(this).removeAttr('style');
             
             if($(this).height() < $(this).find('.slide-inner').height())
             {

@@ -18,35 +18,43 @@
                 // Node.js stuff
                 socket = io.connect(window.location.host);
 
-                socket.on('status', function(status)
-                {
-                    $('.footer .status a').text(status.message);
-                });
-                   
-                socket.on('users', function(users)
-                {
-                    $('.footer .users a').text('Users: '+users.count);
-                });
+                var password = prompt("What is the magic word?");
+                socket.emit('password', {value: password});
 
-                socket.on('ping', function(ping)
+                socket.on('authenticated', function()
                 {
-                    if(typeof ping.last != "undefined")
+                    socket.on('status', function(status)
                     {
-                        $('.footer .ping a').text('Ping: '+ping.last.toFixed(1)+'ms');
-                    }
+                        $('.footer .status a').text(status.message);
+                    });
+                       
+                    socket.on('users', function(users)
+                    {
+                        $('.footer .users a').text('Users: '+users.count);
+                    });
+
+                    socket.on('ping', function(ping)
+                    {
+                        if(typeof ping.last != "undefined")
+                        {
+                            $('.footer .ping a').text('Ping: '+ping.last.toFixed(1)+'ms');
+                        }
+                        
+                        ping.pong = new Date().getTime();
+                        socket.emit('pong', ping);
+                    });
                     
-                    ping.pong = new Date().getTime();
-                    socket.emit('pong', ping);
-                });
+                    $('.next, .prev').fadeIn();
+                    
+                    $('body').on('click', '.next', function()
+                    {
+                        socket.emit('action', {name: 'next'});
+                    });
 
-                $('body').on('click', '.next', function()
-                {
-                    socket.emit('action', {name: 'next'});
-                });
-
-                $('body').on('click', '.prev', function()
-                {
-                    socket.emit('action', {name: 'previous'});
+                    $('body').on('click', '.prev', function()
+                    {
+                        socket.emit('action', {name: 'previous'});
+                    });
                 });
             });
         </script>
@@ -55,8 +63,8 @@
             .users { text-align: center; }
             .ping { text-align: right; }
 
-            .next { background-color: #ccc; top: 25%; position: fixed; bottom: 25%; right: 0; left: 90% }
-            .prev { background-color: #ccc; top: 25%; position: fixed; bottom: 25%; left: 0; right: 90% }
+            .next { background-color: green; display: none; top: 25%; position: fixed; bottom: 25%; right: 0; left: 80% }
+            .prev { background-color: red; display: none; top: 25%; position: fixed; bottom: 25%; left: 0; right: 80% }
         </style>
     </head>
 
