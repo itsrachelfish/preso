@@ -34,3 +34,6 @@ h1 { font-size: 50pt; }
 
 .rainbow { text-align: center; }
 .rainbow span { margin: -5px; padding: 0; font-size: 50pt; }
+.rainbow img { height: 80%; max-height:80%; }
+
+.diagram svg { height: 90%; max-height: 90%; margin-top: -3%; }
