@@ -1,0 +1,36 @@
+a { cursor: pointer; }
+.splash { position: fixed; top: 0; left: 0; bottom: 0; right: 0; background-color:rgba(0, 0, 0, 0.9); z-index:9001; }
+.splash .accept { background-color: rgba(0, 255, 0, 0.75); position:fixed; top: 50%; bottom: 0; left:0; right: 50%; }
+.splash .deny { background-color: rgba(255, 0, 0, 0.75); position:fixed; top: 50%; bottom: 0; left:50%; right: 0; }
+
+body { overflow: hidden; background-color: #ddd; }
+h1 { font-size: 50pt; }
+
+.slides { position: relative; }
+.slide-wrap { position: relative; }
+.slide-inner { padding: 10px; }
+
+.title-box { position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: #fff; }
+.slide-box { font-size: 30pt; background-color: #fff; padding:0.25em 1em; border: 1px solid #ccc; border-radius: 8px; position: fixed; top: 50px; bottom: 100px; left: 5%; right: 5%  }
+
+.slide-box { -webkit-box-shadow: 0px 5px 30px -4px rgba(50, 50, 50, 0.8);
+                -moz-box-shadow:    0px 5px 30px -4px rgba(50, 50, 50, 0.8);
+                box-shadow:         0px 5px 30px -4px rgba(50, 50, 50, 0.8); }
+                
+.slide-hide { display: none; }
+.slide-show { display: inline; }
+
+.users { text-align: center; }
+.ping { text-align: right; }
+
+.slide svg { position: absolute; }
+.flower svg { bottom: -10px; width: 150px; height: 275px; max-height: 25%; }
+.welcome svg { width: 300px; height: 100px; opacity: 0.44; max-width: 30%; }
+.title svg {  width: 570px; height: 400px; max-width: 75%; max-height: 75%; }
+.butterfly svg { bottom: 15%; left: 13%; width: 125px; height: 100px; max-width: 10%;  } 
+.sun svg { right: -12%; top:-12%; width: 375px; height: 350px;  max-height: 50%; max-width: 50%; }
+.other-flower svg { bottom: -10px; right: 20%; width: 160px; height: 200px; max-height: 25%; }
+.leaf svg { bottom: -20px; right: 5%; width: 150px; height: 150px; max-height: 15%; }
+
+.rainbow { text-align: center; }
+.rainbow span { margin: -5px; padding: 0; font-size: 50pt; }

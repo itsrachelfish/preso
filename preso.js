@@ -1,3 +1,6 @@
+// Usage: run this with your admin password as an argument:
+// user@host:~/preso$ node preso.js "lol hacked"
+
 var express = require('express'),
     app     = require('express')(),
     server  = require('http').createServer(app),
