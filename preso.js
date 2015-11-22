@@ -64,16 +64,22 @@ io.sockets.on('connection', function (socket)
     socket.emit('slide', {number: slide, name: "new"});
     socket.emit('time', {serverTime: new Date().getTime()});
 
+    // Show navigation buttons to users if no admin password was used
+    if(process.argv[2] === undefined)
+    {
+        socket.emit('show', {selector: '.buttons'});
+    }
+
     socket.on('action', function(action)
     {
         // Only accept actions from authed users
-        if(typeof auth[socket.id] != "undefined" && auth[socket.id])
+        if(typeof auth[socket.id] != "undefined" && auth[socket.id] || process.argv[2] === undefined)
             handleAction(action);
     });
 
     socket.on('abort', function()
     {
-        if(typeof auth[socket.id] != "undefined" && auth[socket.id])
+        if(typeof auth[socket.id] != "undefined" && auth[socket.id] || process.argv[2] === undefined)
             io.sockets.emit('abort');
     });
 

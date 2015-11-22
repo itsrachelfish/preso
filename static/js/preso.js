@@ -18,7 +18,7 @@ $(document).ready(function()
         $('.splash').fadeOut();
     });
     
-    socket = io.connect(window.location.host);
+    socket = io.connect(window.location.hostname + ':1337');
 
     socket.on('time', function(time)
     {
@@ -142,6 +142,11 @@ $(document).ready(function()
         }, timeout);
     });
 
+    socket.on('show', function(show)
+    {
+        $(show.selector).fadeIn();
+    });
+
     var viewport = {width: 0, height: 0};
 
     // Fun UI stuff
@@ -181,6 +186,16 @@ $(document).ready(function()
     });
 
     $(window).trigger('resize');
+
+    $('body').on('click', '.next', function()
+    {
+        socket.emit('action', {name: 'next'});
+    });
+
+    $('body').on('click', '.prev', function()
+    {
+        socket.emit('action', {name: 'previous'});
+    });
     
     var titleInterval = setInterval(function()
     {

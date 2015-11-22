@@ -1,0 +1,24 @@
+{
+  "name": "preso",
+  "version": "1.0.0",
+  "description": "rachel's preso about websockets from back in the day",
+  "main": "preso.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itsrachelfish/preso.git"
+  },
+  "author": "Rachel Fish <rachel@wetfish.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itsrachelfish/preso/issues"
+  },
+  "homepage": "https://github.com/itsrachelfish/preso",
+  "dependencies": {
+    "3": "^1.0.1",
+    "express": "^3.21.2",
+    "socket.io": "^0.9.17"
+  }
+}
